@@ -145,7 +145,16 @@ class NeuralNetwork:
         numpy array: The predicted output
         """
         activations = self.forward_propagation(X)
-        return activations['A' + str(len(self.layer_sizes) - 1)]
+        probabilities = activations['A' + str(len(self.layer_sizes) - 1)]
+        
+        predictions = []
+        for prob in probabilities:
+            if prob>0.5:
+                predictions.append(1)
+            else:
+                predictions.append(0)
+                
+        return predictions
 
 
 def generate_data():
@@ -159,19 +168,20 @@ def generate_data():
     np.random.seed(0)  # For reproducibility
 
     # Generate 500 samples, each with 2 features (random values)
-    X = np.random.randn(500, 2)  # 500 samples, 1 feature
+    X = np.random.randn(500, 2)  # 500 samples, 2 features
 
     # Define the linear function parameters
-    m = 2  # Slope
+    m = np.array([1,2])  # Slope
     c = 1  # Intercept
 
     # Generate labels (Y) based on the linear function y = m * x + c
-    Y = m * X + c
+    Y = np.dot(X , m) + c
 
     # Add Gaussian noise with mean=0 and std=0.5 to simulate real-world data
     noise = np.random.normal(0, 0.5, Y.shape)  # Gaussian noise
     Y = Y + noise
-    Y = np.sigmoid(Y)
+    Y = 1/(1 + np.exp(-Y))
+    
     Z = []
     for y in Y :
         if y>0.5:
