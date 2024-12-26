@@ -158,8 +158,8 @@ def generate_data():
     """
     np.random.seed(0)  # For reproducibility
 
-    # Generate 50 samples, each with 1 feature (random values)
-    X = np.random.randn(500, 1)  # 500 samples, 1 feature
+    # Generate 500 samples, each with 2 features (random values)
+    X = np.random.randn(500, 2)  # 500 samples, 1 feature
 
     # Define the linear function parameters
     m = 2  # Slope
@@ -171,8 +171,15 @@ def generate_data():
     # Add Gaussian noise with mean=0 and std=0.5 to simulate real-world data
     noise = np.random.normal(0, 0.5, Y.shape)  # Gaussian noise
     Y = Y + noise
+    Y = np.sigmoid(Y)
+    Z = []
+    for y in Y :
+        if y>0.5:
+            Z.append(1)
+        else:
+            Z.append(0)
 
-    return X, Y
+    return X, Z
 
 
 
